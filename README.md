@@ -22,3 +22,7 @@ exe版本已经完成打包可以直接打开使用
 ## 作者博客
 
 www.keyblue.cn
+
+## 问题
+
+有问题请联系邮箱：liujiakang159@163.com
