@@ -7,6 +7,8 @@
 
 exe版本下载链接：https://raw.githubusercontent.com/liujiakang199/BiliVideo_Download/main/dist/main.exe
 
+如果此链接无法下载，直接克隆源码在dist文件夹下保存exe版本
+
 py版本直接克隆源码即可
 
 ## 使用方法
@@ -15,3 +17,8 @@ py源码需要自己安装模块才能使用
 exe版本已经完成打包可以直接打开使用
 
 关于cookie：携带cookie默认1080p清晰度，不带cookie是480p清晰度
+
+
+## 作者博客
+
+www.keyblue.cn
