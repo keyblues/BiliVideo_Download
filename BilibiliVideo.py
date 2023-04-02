@@ -10,14 +10,15 @@ class BilibiliVideo:
         # referer 和 User-Agent要改写成字典形式
         self.headers = {
             "referer": "https://www.bilibili.com",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/108.0.0.0 Safari/537.36 "
         }
 
     def cookie(self, cookie):
         # 设置cookie
         self.cookies = {"SESSDATA": cookie}
 
-    def inquire(self,bv):
+    def inquire(self, bv):
         # 检查bv号是否合法
         url = 'https://api.bilibili.com/x/web-interface/view?bvid=' + str(bv)
         response = requests.get(url=url)
@@ -35,7 +36,7 @@ class BilibiliVideo:
         self.video()
         return self.response.status_code
 
-    def collectionname(self,bv,episode):
+    def collectionname(self, bv, episode):
         # 获取视频合集标题
         url = 'https://api.bilibili.com/x/web-interface/view?bvid='
         re23 = requests.get(url + bv)
@@ -71,13 +72,13 @@ class BilibiliVideo:
         self.audio_content = requests.get(url=audio_url, headers=self.headers).content
         # print(video_content)
 
-    def write(self,fold):
+    def write(self, fold):
+        self.fold = fold
         folder = os.path.exists('.\\tmp')
         # 判断是否存在文件夹如果不存在则创建为文件夹
         if not folder:
             # os.makedirs 传入一个path路径，生成一个递归的文件夹；如果文件夹存在，就会报错,因此创建文件夹之前，需要使用os.path.exists(path)函数判断文件夹是否存在；
             os.makedirs('.\\tmp')
-
         # 创建mp4文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
             f.write(self.video_content)
@@ -85,21 +86,36 @@ class BilibiliVideo:
         with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
             f.write(self.audio_content)
 
-        cmd = f"ffmpeg.exe -i .\\tmp\\{self.title}.mp4 -i .\\tmp\\{self.title}.mp3 -c:v copy -c:a aac -strict experimental -y {fold + '/' + self.title}.mp4"
+        cmd = f'ffmpeg.exe -i ".\\tmp\\{self.title}.mp4" -i ".\\tmp\\{self.title}.mp3" -c:v copy -c:a aac -strict ' \
+              f'experimental -y "{self.fold + "/" + self.title}.mp4" '
         os.system(cmd)
         os.remove(f'tmp\\{self.title}.mp3')
         os.remove(f'tmp\\{self.title}.mp4')
 
-    def rename(self,titlenew):
-        cmd = f'rename {self.title}.mp4 {titlenew}.mp4'
-        os.system(cmd)
+    def rename(self, titlenew):
+        for i in range(1,100):
+            folder = os.path.exists(f'{self.fold + "/" + titlenew}.mp4')
+            if not folder:
+                os.rename(f'{self.fold + "/" + self.title}.mp4', f'{self.fold + "/" + titlenew}.mp4')
+                break
+            else:
+                titlenew = titlenew + "(" + str(i) + ")"
+                continue
 
+    def ffmpeg(self):
+        # 检查是否安装ffmpeg
+        path = os.environ
+        if re.search('ffmpeg', str(path)):
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
     bili = BilibiliVideo()
     bili.cookie('')
-    video = bili.bili_requests('BV1pi4y1V7wN')
+    video = bili.bili_requests('BV1Zd4y1M7TB?p=1')
     bili.write('C:/Users/ljk/Pictures/视频项目')
-    #print(video)
-    print(bili.inquire('BV1RX4y1U7Py'))
+    filename = bili.collectionname('BV1Zd4y1M7TB', 1)
+    print(bili.rename(filename))
+    bili.ffmpeg()
