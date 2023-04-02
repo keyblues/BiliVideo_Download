@@ -4,8 +4,12 @@
   ('selectors', 'c:\\program files\\python\\lib\\selectors.py', 'PYMODULE'),
   ('contextlib', 'c:\\program files\\python\\lib\\contextlib.py', 'PYMODULE'),
   ('signal', 'c:\\program files\\python\\lib\\signal.py', 'PYMODULE'),
-  ('_strptime', 'c:\\program files\\python\\lib\\_strptime.py', 'PYMODULE'),
-  ('datetime', 'c:\\program files\\python\\lib\\datetime.py', 'PYMODULE'),
+  ('ntpath', 'c:\\program files\\python\\lib\\ntpath.py', 'PYMODULE'),
+  ('string', 'c:\\program files\\python\\lib\\string.py', 'PYMODULE'),
+  ('genericpath', 'c:\\program files\\python\\lib\\genericpath.py', 'PYMODULE'),
+  ('posixpath', 'c:\\program files\\python\\lib\\posixpath.py', 'PYMODULE'),
+  ('stat', 'c:\\program files\\python\\lib\\stat.py', 'PYMODULE'),
+  ('ssl', 'c:\\program files\\python\\lib\\ssl.py', 'PYMODULE'),
   ('calendar', 'c:\\program files\\python\\lib\\calendar.py', 'PYMODULE'),
   ('argparse', 'c:\\program files\\python\\lib\\argparse.py', 'PYMODULE'),
   ('textwrap', 'c:\\program files\\python\\lib\\textwrap.py', 'PYMODULE'),
@@ -54,7 +58,6 @@
   ('email._parseaddr',
    'c:\\program files\\python\\lib\\email\\_parseaddr.py',
    'PYMODULE'),
-  ('socket', 'c:\\program files\\python\\lib\\socket.py', 'PYMODULE'),
   ('random', 'c:\\program files\\python\\lib\\random.py', 'PYMODULE'),
   ('hashlib', 'c:\\program files\\python\\lib\\hashlib.py', 'PYMODULE'),
   ('logging',
@@ -106,9 +109,6 @@
   ('asyncio.selector_events',
    'c:\\program files\\python\\lib\\asyncio\\selector_events.py',
    'PYMODULE'),
-  ('ssl', 'c:\\program files\\python\\lib\\ssl.py', 'PYMODULE'),
-  ('base64', 'c:\\program files\\python\\lib\\base64.py', 'PYMODULE'),
-  ('getopt', 'c:\\program files\\python\\lib\\getopt.py', 'PYMODULE'),
   ('asyncio.proactor_events',
    'c:\\program files\\python\\lib\\asyncio\\proactor_events.py',
    'PYMODULE'),
@@ -274,6 +274,7 @@
   ('distutils.fancy_getopt',
    'c:\\program files\\python\\lib\\distutils\\fancy_getopt.py',
    'PYMODULE'),
+  ('getopt', 'c:\\program files\\python\\lib\\getopt.py', 'PYMODULE'),
   ('distutils',
    'c:\\program files\\python\\lib\\distutils\\__init__.py',
    'PYMODULE'),
@@ -555,7 +556,6 @@
   ('_compat_pickle',
    'c:\\program files\\python\\lib\\_compat_pickle.py',
    'PYMODULE'),
-  ('string', 'c:\\program files\\python\\lib\\string.py', 'PYMODULE'),
   ('bisect', 'c:\\program files\\python\\lib\\bisect.py', 'PYMODULE'),
   ('email.feedparser',
    'c:\\program files\\python\\lib\\email\\feedparser.py',
@@ -584,12 +584,12 @@
   ('lzma', 'c:\\program files\\python\\lib\\lzma.py', 'PYMODULE'),
   ('bz2', 'c:\\program files\\python\\lib\\bz2.py', 'PYMODULE'),
   ('fnmatch', 'c:\\program files\\python\\lib\\fnmatch.py', 'PYMODULE'),
-  ('ntpath', 'c:\\program files\\python\\lib\\ntpath.py', 'PYMODULE'),
-  ('genericpath', 'c:\\program files\\python\\lib\\genericpath.py', 'PYMODULE'),
-  ('posixpath', 'c:\\program files\\python\\lib\\posixpath.py', 'PYMODULE'),
-  ('stat', 'c:\\program files\\python\\lib\\stat.py', 'PYMODULE'),
-  ('stringprep', 'c:\\program files\\python\\lib\\stringprep.py', 'PYMODULE'),
+  ('datetime', 'c:\\program files\\python\\lib\\datetime.py', 'PYMODULE'),
+  ('_strptime', 'c:\\program files\\python\\lib\\_strptime.py', 'PYMODULE'),
+  ('base64', 'c:\\program files\\python\\lib\\base64.py', 'PYMODULE'),
+  ('socket', 'c:\\program files\\python\\lib\\socket.py', 'PYMODULE'),
   ('_py_abc', 'c:\\program files\\python\\lib\\_py_abc.py', 'PYMODULE'),
+  ('stringprep', 'c:\\program files\\python\\lib\\stringprep.py', 'PYMODULE'),
   ('BilibiliVideo',
    'D:\\python项目\\BiliVideo_Download\\BilibiliVideo.py',
    'PYMODULE'),
@@ -766,9 +766,9 @@
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py',
    'PYMODULE'),
-  ('cryptography.hazmat.bindings.openssl.binding',
+  ('cryptography.hazmat.bindings.openssl',
    'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py',
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py',
    'PYMODULE'),
   ('cryptography.hazmat.bindings',
    'c:\\program '
@@ -778,12 +778,12 @@
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\__init__.py',
    'PYMODULE'),
+  ('cryptography.hazmat.bindings.openssl.binding',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py',
+   'PYMODULE'),
   ('cryptography.exceptions',
    'c:\\program files\\python\\lib\\site-packages\\cryptography\\exceptions.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.bindings.openssl',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py',
    'PYMODULE'),
   ('cryptography.hazmat.backends.openssl.ec',
    'c:\\program '
@@ -876,40 +876,34 @@
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py',
    'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl',
+  ('cryptography.hazmat.backends.openssl.x448',
    'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py',
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\x448.py',
    'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.utils',
+  ('cryptography.hazmat.primitives.asymmetric.x448',
    'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\utils.py',
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py',
    'PYMODULE'),
-  ('cryptography.hazmat.primitives.asymmetric.utils',
+  ('cryptography.hazmat.backends.openssl.encode_asn1',
    'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py',
-   'PYMODULE'),
-  ('cryptography.hazmat._der',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\_der.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.ciphers',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ciphers.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.ed448',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ed448.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.primitives.asymmetric.ed448',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.decode_asn1',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\decode_asn1.py',
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\encode_asn1.py',
    'PYMODULE'),
   ('cryptography.x509.name',
    'c:\\program files\\python\\lib\\site-packages\\cryptography\\x509\\name.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.hashes',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\hashes.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.backend',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py',
+   'PYMODULE'),
+  ('cryptography.x509.ocsp',
+   'c:\\program files\\python\\lib\\site-packages\\cryptography\\x509\\ocsp.py',
+   'PYMODULE'),
+  ('cryptography.x509.base',
+   'c:\\program files\\python\\lib\\site-packages\\cryptography\\x509\\base.py',
    'PYMODULE'),
   ('cryptography.x509.extensions',
    'c:\\program '
@@ -923,72 +917,6 @@
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\x509\\certificate_transparency.py',
    'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.hashes',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\hashes.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.rsa',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\rsa.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.primitives.asymmetric.padding',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.aead',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\aead.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.primitives.ciphers.aead',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.encode_asn1',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\encode_asn1.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.dsa',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\dsa.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.x448',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\x448.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.primitives.asymmetric.x448',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.interfaces',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\interfaces.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.ed25519',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ed25519.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.hmac',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\hmac.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.ocsp',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ocsp.py',
-   'PYMODULE'),
-  ('cryptography.x509.ocsp',
-   'c:\\program files\\python\\lib\\site-packages\\cryptography\\x509\\ocsp.py',
-   'PYMODULE'),
-  ('cryptography.x509.base',
-   'c:\\program files\\python\\lib\\site-packages\\cryptography\\x509\\base.py',
-   'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.backend',
-   'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py',
-   'PYMODULE'),
   ('cryptography.hazmat.primitives.kdf.scrypt',
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\scrypt.py',
@@ -996,6 +924,22 @@
   ('cryptography.hazmat.primitives.kdf',
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.padding',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.ed448',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py',
+   'PYMODULE'),
+  ('cryptography.hazmat._der',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\_der.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py',
    'PYMODULE'),
   ('cryptography.hazmat.backends.openssl.poly1305',
    'c:\\program '
@@ -1005,13 +949,69 @@
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\cmac.py',
    'PYMODULE'),
-  ('cryptography.hazmat.backends.openssl.x509',
+  ('cryptography.hazmat.backends.openssl.aead',
    'c:\\program '
-   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\x509.py',
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\aead.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers.aead',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.ciphers',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ciphers.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.ed448',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ed448.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.ocsp',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ocsp.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.utils',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\utils.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.utils',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py',
    'PYMODULE'),
   ('cryptography.hazmat.backends.openssl.dh',
    'c:\\program '
    'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\dh.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.ed25519',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\ed25519.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.hmac',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\hmac.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.decode_asn1',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\decode_asn1.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.rsa',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\rsa.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.x509',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\x509.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.interfaces',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\interfaces.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.dsa',
+   'c:\\program '
+   'files\\python\\lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\dsa.py',
    'PYMODULE'),
   ('cryptography.x509',
    'c:\\program '
