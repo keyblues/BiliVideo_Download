@@ -67,8 +67,6 @@ class MyGui:
             messagebox.showinfo("警告！", "BV号不合法或不存在！")
             self.enter.config(state='normal')
             exit()
-        self.log.insert(1.0, f'开始下载{self.bv.get()}，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
-        self.log.insert(1.0, '\n')
         if self.CheckbuttonVar.get() == '1':
             messagebox.showinfo("警告！", "将要下载合集视频，请确认参数是否正确！")
             for i in range(int(self.start.get()), int(self.stop.get()) + 1):
@@ -90,6 +88,8 @@ class MyGui:
         else:
             try:
                 video = bili.bili_requests(self.bv.get())
+                self.log.insert(1.0, f'开始下载{self.bv.get()}，视频大小：{bili.size()}，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
+                self.log.insert(1.0, '\n')
             except:
                 messagebox.showinfo("警告！", "请求失败！")
             if video == 200:
