@@ -106,7 +106,6 @@ class BilibiliVideo:
         os.system(cmd)
         os.remove(f'tmp\\{self.title}.mp3')
         os.remove(f'tmp\\{self.title}.mp4')
-        os.remove(f'tmp')
 
     def rename(self, titlenew):
         for i in range(1, 100):
