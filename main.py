@@ -11,7 +11,7 @@ class MyGui:
     def __init__(self, init_window_name):
         self.bili = BilibiliVideo()
         self.init_windows_name = init_window_name
-        self.init_windows_name.title("BiliVideo v1.0")
+        self.init_windows_name.title("BiliVideo v1.1")
         self.init_windows_name.config(bg='#DDDDDD')
         self.init_windows_name.geometry('600x300')
         self.CheckbuttonVar = StringVar(value=0)
