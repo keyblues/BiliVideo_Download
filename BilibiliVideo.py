@@ -92,6 +92,7 @@ class BilibiliVideo:
                 progressbar.update()
                 if chunk:
                     f.write(chunk)
+        self.videore.close()
         # 创建mp3文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
             for chunk in self.audiore.iter_content(chunk_size=4096):  # 1024B
@@ -99,7 +100,7 @@ class BilibiliVideo:
                 progressbar.update()
                 if chunk:
                     f.write(chunk)
-
+        self.audiore.close()
         cmd = f'ffmpeg.exe -i ".\\tmp\\{self.title}.mp4" -i ".\\tmp\\{self.title}.mp3" -c:v copy -c:a aac -strict ' \
               f'experimental -y "{self.fold + "/" + self.title}.mp4" '
         os.system(cmd)
