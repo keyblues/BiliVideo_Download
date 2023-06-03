@@ -61,23 +61,22 @@ class BilibiliVideo:
         # html_data是字符串类型，将字符串转换成字典
         json_data = json.loads(html_data)
 
-        video_url = json_data["data"]["dash"]["video"][0]["baseUrl"]
+        self.video_url = json_data["data"]["dash"]["video"][0]["baseUrl"]
         # print("视频画面地址为：", video_url)
         # 提取音频网址
-        audio_url = json_data["data"]["dash"]["audio"][0]["baseUrl"]
+        self.audio_url = json_data["data"]["dash"]["audio"][0]["baseUrl"]
         # print("音频地址为：", audio_url)
-
-        # response.content获取响应体的二进制数据
-        self.videore = requests.get(url=video_url, headers=self.headers, cookies=self.cookies, stream=True)
-        self.audiore = requests.get(url=audio_url, headers=self.headers, stream=True)
 
     def write(self, fold, progressbar):
         self.fold = fold
+
+        video_re = requests.get(url=self.video_url, headers=self.headers, cookies=self.cookies)
+        audio_re = requests.get(url=self.audio_url, headers=self.headers)
         # 清空进度条
         progressbar['value'] = 0
         # 进度值最大值
-        progressbar['maximum'] = int(self.videore.headers.get('Content-Length')) \
-                                 + int(self.audiore.headers.get('Content-Length'))
+        progressbar['maximum'] = int(video_re.headers.get('Content-Length')) + int(
+            audio_re.headers.get('Content-Length'))
 
         folder = os.path.exists('.\\tmp')
         # 判断是否存在文件夹如果不存在则创建为文件夹
@@ -86,19 +85,21 @@ class BilibiliVideo:
             os.makedirs('.\\tmp')
         # 创建mp4文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
-            for chunk in self.videore.iter_content(chunk_size=4096):  # 1024B
-                # 进度条更新
-                progressbar['value'] += 4096
-                progressbar.update()
-                if chunk:
-                    f.write(chunk)
+            with requests.get(url=self.audio_url, headers=self.headers, cookies=self.cookies, stream=True) as report:
+                for chunk in report.iter_content(chunk_size=4096):  # 1024B
+                    # 进度条更新
+                    progressbar['value'] += 4096
+                    progressbar.update()
+                    if chunk:
+                        f.write(chunk)
         # 创建mp3文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
-            for chunk in self.audiore.iter_content(chunk_size=4096):  # 1024B
-                progressbar['value'] += 4096
-                progressbar.update()
-                if chunk:
-                    f.write(chunk)
+            with requests.get(url=self.video_url, headers=self.headers, cookies=self.cookies, stream=True) as report:
+                for chunk in report.iter_content(chunk_size=4096):  # 1024B
+                    progressbar['value'] += 4096
+                    progressbar.update()
+                    if chunk:
+                        f.write(chunk)
 
         cmd = f'ffmpeg.exe -i ".\\tmp\\{self.title}.mp4" -i ".\\tmp\\{self.title}.mp3" -c:v copy -c:a aac -strict ' \
               f'experimental -y "{self.fold + "/" + self.title}.mp4" '
@@ -126,7 +127,9 @@ class BilibiliVideo:
             return False
 
     def size(self):
-        value = int(self.videore.headers.get('Content-Length'))
+        video_re = requests.get(url=self.video_url, headers=self.headers, cookies=self.cookies)
+        audio_re = requests.get(url=self.audio_url, headers=self.headers)
+        value = int(video_re.headers.get('Content-Length')) + int(audio_re.headers.get('Content-Length'))
         units = ["B", "KB", "MB", "GB", "TB", "PB"]
         size = 1024.0
         for i in range(len(units)):
