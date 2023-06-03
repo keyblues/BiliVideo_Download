@@ -86,16 +86,16 @@ class BilibiliVideo:
             os.makedirs('.\\tmp')
         # 创建mp4文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
-            for chunk in self.videore.iter_content(chunk_size=2048):  # 1024B
+            for chunk in self.videore.iter_content(chunk_size=4096):  # 1024B
                 # 进度条更新
-                progressbar['value'] += 2048
+                progressbar['value'] += 4096
                 progressbar.update()
                 if chunk:
                     f.write(chunk)
         # 创建mp3文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
-            for chunk in self.audiore.iter_content(chunk_size=2048):  # 1024B
-                progressbar['value'] += 2048
+            for chunk in self.audiore.iter_content(chunk_size=4096):  # 1024B
+                progressbar['value'] += 4096
                 progressbar.update()
                 if chunk:
                     f.write(chunk)
