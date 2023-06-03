@@ -62,18 +62,23 @@ class BilibiliVideo:
         json_data = json.loads(html_data)
 
         video_url = json_data["data"]["dash"]["video"][0]["baseUrl"]
-        #print("视频画面地址为：", video_url)
+        # print("视频画面地址为：", video_url)
         # 提取音频网址
         audio_url = json_data["data"]["dash"]["audio"][0]["baseUrl"]
-        #print("音频地址为：", audio_url)
+        # print("音频地址为：", audio_url)
 
         # response.content获取响应体的二进制数据
         self.videore = requests.get(url=video_url, headers=self.headers, cookies=self.cookies, stream=True)
         self.audiore = requests.get(url=audio_url, headers=self.headers, stream=True)
 
-
-    def write(self, fold):
+    def write(self, fold, progressbar):
         self.fold = fold
+        # 清空进度条
+        progressbar['value'] = 0
+        # 进度值最大值
+        progressbar['maximum'] = int(self.videore.headers.get('Content-Length')) \
+                                 + int(self.audiore.headers.get('Content-Length'))
+
         folder = os.path.exists('.\\tmp')
         # 判断是否存在文件夹如果不存在则创建为文件夹
         if not folder:
@@ -82,11 +87,16 @@ class BilibiliVideo:
         # 创建mp4文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
             for chunk in self.videore.iter_content(chunk_size=1024):  # 1024B
+                # 进度条更新
+                progressbar['value'] += 1024
+                progressbar.update()
                 if chunk:
                     f.write(chunk)
         # 创建mp3文件，写入二进制数据
         with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
             for chunk in self.audiore.iter_content(chunk_size=1024):  # 1024B
+                progressbar['value'] += 1024
+                progressbar.update()
                 if chunk:
                     f.write(chunk)
 
@@ -95,10 +105,10 @@ class BilibiliVideo:
         os.system(cmd)
         os.remove(f'tmp\\{self.title}.mp3')
         os.remove(f'tmp\\{self.title}.mp4')
-        os.remove(f'tmp\\')
+        os.remove(f'tmp')
 
     def rename(self, titlenew):
-        for i in range(1,100):
+        for i in range(1, 100):
             folder = os.path.exists(f'{self.fold + "/" + titlenew}.mp4')
             if not folder:
                 os.rename(f'{self.fold + "/" + self.title}.mp4', f'{self.fold + "/" + titlenew}.mp4')
@@ -120,17 +130,17 @@ class BilibiliVideo:
         units = ["B", "KB", "MB", "GB", "TB", "PB"]
         size = 1024.0
         for i in range(len(units)):
-          if (value / size) < 1:
-              return "%.2f%s" % (value, units[i])
-          value = value / size
+            if (value / size) < 1:
+                return "%.2f%s" % (value, units[i])
+            value = value / size
 
 
 if __name__ == '__main__':
     bili = BilibiliVideo()
     bili.cookie('e047d422%2C1692100614%2C8cf3d%2A21')
     video = bili.bili_requests('BV1J84y1V7BH')
-    #bili.write('C:/Users/ljk/Pictures/视频项目')
-    #filename = bili.collectionname('BV1Zd4y1M7TB', 1)
-    #print(bili.rename(filename))
-    #bili.ffmpeg()
-    print(bili.size())
+    bili.write('C:/Users/ljk/Pictures/视频项目')
+    # filename = bili.collectionname('BV1Zd4y1M7TB', 1)
+    # print(bili.rename(filename))
+    # bili.ffmpeg()
+    print(bili.ffmpeg())

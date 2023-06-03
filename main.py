@@ -2,13 +2,14 @@ import threading
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-import BilibiliVideo
+import tkinter.ttk
 from BilibiliVideo import *
 import time
 
 
 class MyGui:
     def __init__(self, init_window_name):
+        self.bili = BilibiliVideo()
         self.init_windows_name = init_window_name
         self.init_windows_name.title("BiliVideo v1.0")
         self.init_windows_name.config(bg='#DDDDDD')
@@ -35,14 +36,17 @@ class MyGui:
         Label(root, text='BV号:', bg='#DDDDDD', font=("Times", 15)).place(x=0, y=21, width=99, height=29)
         Label(root, text='Cookie:', bg='#DDDDDD', font=("Times", 15)).place(x=0, y=61, width=99, height=29)
         Label(root, text='保存目录:', bg='#DDDDDD', font=("Times", 15)).place(x=0, y=101, width=99, height=29)
-        self.enter = Button(root, text="Enter", font=("Times", 15), bg='#DDDDDD',command=lambda: self.thread())
+        self.enter = Button(root, text="Enter", font=("Times", 15), bg='#DDDDDD', command=lambda: self.thread())
         self.enter.place(x=501, y=20, width=99, height=70)
         Button(root, text="选择", font=("Times", 15), bg='#DDDDDD', command=self.fold).place(x=501, y=100, width=99,
-                                                                                           height=30)
+                                                                                             height=30)
         Checkbutton(root, text="合集", bg='#DDDDDD', font=("Times", 15), activebackground='#DDDDDD', command='',
                     variable=self.CheckbuttonVar).place(x=0, y=141, width=99, height=30)
         self.log = Text(root)
         self.log.place(x=5, y=181, width=590, height=115)
+        self.progressbar = tkinter.ttk.Progressbar(root)
+        self.progressbar.place(x=285, y=141, width=280, height=30)
+        self.progressbar.update()
 
     def fold(self):
         # 打开目录选择器，并返回目录路径
@@ -60,40 +64,40 @@ class MyGui:
     def download(self):
         global video
         self.code = ''
-        bili = BilibiliVideo()
-        bili.cookie(self.cookies.get())
+        self.bili.cookie(self.cookies.get())
         self.enter.config(state='disabled')
-        if not bili.inquire(self.bv.get()):
+        if not self.bili.inquire(self.bv.get()):
             messagebox.showinfo("警告！", "BV号不合法或不存在！")
             self.enter.config(state='normal')
             exit()
         if self.CheckbuttonVar.get() == '1':
-            messagebox.showinfo("警告！", "将要下载合集视频，请确认参数是否正确！")
             for i in range(int(self.start.get()), int(self.stop.get()) + 1):
                 try:
-                    video = bili.bili_requests(str(self.bv.get() + '?p=' + str(i)))
+                    video = self.bili.bili_requests(str(self.bv.get() + '?p=' + str(i)))
                 except:
                     messagebox.showinfo("警告！", "请求失败！")
                     break
                 if video == 200:
-                    bili.write(self.foldername.get())
-                    filename = bili.collectionname(str(self.bv.get()), i)
-                    bili.rename(filename)
+                    self.bili.write(self.foldername.get(), self.progressbar)
+                    filename = self.bili.collectionname(str(self.bv.get()), i)
+                    self.bili.rename(filename)
                     self.code = True
                 else:
                     self.code = False
                 self.logok(self.bv.get() + '?p=' + str(i))
-            self.log.insert(1.0, f'视频合集{self.bv.get()}?p={self.start.get()}-{self.stop.get()}下载完成！，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
+            self.log.insert(1.0, f'视频合集{self.bv.get()}?p={self.start.get()}-{self.stop.get()}下载完成！，'
+                                 f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
             self.log.insert(1.0, '\n')
         else:
             try:
-                video = bili.bili_requests(self.bv.get())
-                self.log.insert(1.0, f'开始下载{self.bv.get()}，视频大小：{bili.size()}，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
+                video = self.bili.bili_requests(self.bv.get())
+                self.log.insert(1.0, f'开始下载{self.bv.get()}，视频大小：{self.bili.size()}，'
+                                     f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
                 self.log.insert(1.0, '\n')
             except:
                 messagebox.showinfo("警告！", "请求失败！")
             if video == 200:
-                bili.write(self.foldername.get())
+                self.bili.write(self.foldername.get(), self.progressbar)
                 self.code = True
             else:
                 self.code = False
@@ -108,11 +112,11 @@ class MyGui:
         else:
             root.destroy()
 
-    def checkffmpeg(self):
-        if not bili.ffmpeg():
+    def check_ffmpeg(self):
+        if not self.bili.ffmpeg():
             messagebox.showinfo("警告！", "检测到你未安装ffmpeg！")
 
-    def logok(self,bv):
+    def logok(self, bv):
         if self.code:
             self.log.insert(1.0, f'视频{bv}下载成功，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
         elif not self.code:
@@ -124,4 +128,5 @@ if __name__ == '__main__':
     root = Tk()
     windows = MyGui(root)
     windows.get_windows()
+    windows.check_ffmpeg()
     windows.init_windows_name.mainloop()
