@@ -4,11 +4,7 @@
 
 ## 下载方法
 
-可以下载py源码和exe版本
-
-exe版本下载链接：https://raw.githubusercontent.com/liujiakang199/BiliVideo_Download/main/dist/main.exe
-
-如果此链接无法下载，直接克隆源码在dist文件夹下含有exe版本
+提供py源码和exe版本
 
 py版本直接克隆源码即可
 
