@@ -85,22 +85,47 @@ class BilibiliVideo:
             # os.makedirs 传入一个path路径，生成一个递归的文件夹；如果文件夹存在，就会报错,因此创建文件夹之前，需要使用os.path.exists(path)函数判断文件夹是否存在；
             os.makedirs('.\\tmp')
         # 创建mp4文件，写入二进制数据
-        with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
-            for chunk in self.videore.iter_content(chunk_size=4096):  # 1024B
-                # 进度条更新
-                progressbar['value'] += 4096
-                progressbar.update()
-                if chunk:
-                    f.write(chunk)
+        for i in range(20):
+            print('video run')
+            progressbar['value'] = 0
+            try:
+                # 创建mp4文件，写入二进制数据
+                with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
+                    for chunk in self.videore.iter_content(chunk_size=1024):  # 1024B
+                        # 进度条更新
+                        progressbar['value'] += 1024
+                        progressbar.update()
+                        if chunk:
+                            f.write(chunk)
+                print('video ok')
+                break
+            except:
+                self.video()
+                print('video no')
+                continue
         self.videore.close()
-        # 创建mp3文件，写入二进制数据
-        with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
-            for chunk in self.audiore.iter_content(chunk_size=4096):  # 1024B
-                progressbar['value'] += 4096
-                progressbar.update()
-                if chunk:
-                    f.write(chunk)
+        print('video close')
+
+        for i in range(20):
+            print('audio run')
+            progressbar['value'] = int(self.videore.headers.get('Content-Length'))
+            try:
+                # 创建mp3文件，写入二进制数据
+                with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
+                    for chunk in self.audiore.iter_content(chunk_size=2048):  # 1024B
+                        progressbar['value'] += 2048
+                        progressbar.update()
+                        if chunk:
+                            f.write(chunk)
+                print('audio ok')
+                break
+            except:
+                self.video()
+                print('audio no')
+                continue
         self.audiore.close()
+        print('audio close')
+
         cmd = f'ffmpeg.exe -i ".\\tmp\\{self.title}.mp4" -i ".\\tmp\\{self.title}.mp3" -c:v copy -c:a aac -strict ' \
               f'experimental -y "{self.fold + "/" + self.title}.mp4" '
         os.system(cmd)
@@ -139,7 +164,7 @@ if __name__ == '__main__':
     bili = BilibiliVideo()
     bili.cookie('e047d422%2C1692100614%2C8cf3d%2A21')
     video = bili.bili_requests('BV1J84y1V7BH')
-    bili.write('C:/Users/ljk/Pictures/视频项目')
+    # bili.write('C:/Users/ljk/Pictures/视频项目')
     # filename = bili.collectionname('BV1Zd4y1M7TB', 1)
     # print(bili.rename(filename))
     # bili.ffmpeg()
