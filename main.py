@@ -47,6 +47,7 @@ class MyGui:
         self.progressbar = tkinter.ttk.Progressbar(root)
         self.progressbar.place(x=285, y=141, width=280, height=30)
         self.progressbar.update()
+        self.temp_config()
 
     def fold(self):
         # 打开目录选择器，并返回目录路径
@@ -64,6 +65,7 @@ class MyGui:
     def download(self):
         global video
         self.code = ''
+        self.new_config()
         self.bili.cookie(self.cookies.get())
         self.enter.config(state='disabled')
         if not self.bili.inquire(self.bv.get()):
@@ -123,6 +125,37 @@ class MyGui:
             self.log.insert(1.0, f'视频{bv}下载失败，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
         self.log.insert(1.0, '\n')
 
+    def temp_config(self):
+        # 判断是否存在文件如果不存在则创建
+        if not os.path.exists('.\\tmp'):
+            os.makedirs('.\\tmp')
+        if not os.path.exists('.\\tmp\\config.json'):
+            return False
+
+        # 读取配置
+        with open('.\\tmp\\config.json', 'r') as f:
+            self.log.insert(1.0, f'读取历史配置中···，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+            data = json.load(f)
+            if data['bv']:
+                self.bv.set(data['bv'])
+                self.log.insert(1.0, f'成功读取BV号，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+            if data['cookie']:
+                self.cookies.set(data['cookie'])
+                self.log.insert(1.0, f'成功读取cookie值，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+            if data['folder']:
+                self.foldername.set(data['folder'])
+                self.log.insert(1.0, f'成功读取保存目录，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+            self.log.insert(1.0, f'读取已完成，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+
+    def new_config(self):
+        data = {
+            "bv": f"{str(self.bv.get())}",
+            "cookie": f"{str(self.cookies.get())}",
+            "folder": f"{str(self.foldername.get())}"
+        }
+
+        with open('.\\tmp\\config.json', 'w') as f:
+            json.dump(data, f)
 
 if __name__ == '__main__':
     root = Tk()

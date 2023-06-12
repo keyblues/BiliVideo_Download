@@ -3,7 +3,6 @@ import json
 import requests
 import os
 
-
 class BilibiliVideo:
     def __init__(self):
         # 添加headers请求头，对Python解释器进行伪装
@@ -69,12 +68,11 @@ class BilibiliVideo:
 
         # response.content获取响应体的二进制数据
         self.videore = requests.get(url=video_url, headers=self.headers, cookies=self.cookies, stream=True)
-        self.audiore = requests.get(url=audio_url, headers=self.headers, stream=True)
+        self.audiore = requests.get(url=audio_url, headers=self.headers, cookies=self.cookies, stream=True)
 
     def write(self, fold, progressbar):
         self.fold = fold
         # 清空进度条
-        progressbar['value'] = 0
         # 进度值最大值
         progressbar['maximum'] = int(self.videore.headers.get('Content-Length')) \
                                  + int(self.audiore.headers.get('Content-Length'))
@@ -84,47 +82,46 @@ class BilibiliVideo:
         if not folder:
             # os.makedirs 传入一个path路径，生成一个递归的文件夹；如果文件夹存在，就会报错,因此创建文件夹之前，需要使用os.path.exists(path)函数判断文件夹是否存在；
             os.makedirs('.\\tmp')
-        # 创建mp4文件，写入二进制数据
-        for i in range(20):
-            print('video run')
-            progressbar['value'] = 0
-            try:
-                # 创建mp4文件，写入二进制数据
-                with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
-                    for chunk in self.videore.iter_content(chunk_size=1024):  # 1024B
-                        # 进度条更新
-                        progressbar['value'] += 1024
-                        progressbar.update()
-                        if chunk:
-                            f.write(chunk)
-                print('video ok')
-                break
-            except:
-                self.video()
-                print('video no')
-                continue
-        self.videore.close()
-        print('video close')
 
         for i in range(20):
             print('audio run')
-            progressbar['value'] = int(self.videore.headers.get('Content-Length'))
+            progressbar['value'] = 0
             try:
                 # 创建mp3文件，写入二进制数据
                 with open('.\\tmp\\' + self.title + ".mp3", mode="wb") as f:
-                    for chunk in self.audiore.iter_content(chunk_size=2048):  # 1024B
-                        progressbar['value'] += 2048
+                    for chunk in self.audiore.iter_content(chunk_size=4096):  # 1024B
+                        progressbar['value'] += 4096
                         progressbar.update()
                         if chunk:
                             f.write(chunk)
                 print('audio ok')
                 break
             except:
-                self.video()
                 print('audio no')
+                self.video()
                 continue
         self.audiore.close()
         print('audio close')
+
+        for i in range(20):
+            print('video run')
+            progressbar['value'] = int(self.audiore.headers.get('Content-Length'))
+            try:
+                # 创建mp4文件，写入二进制数据
+                with open('.\\tmp\\' + self.title + ".mp4", mode="wb") as f:
+                    for chunk in self.videore.iter_content(chunk_size=4096):  # 1024B
+                        # 进度条更新
+                        progressbar['value'] += 4096
+                        if chunk:
+                            f.write(chunk)
+                print('video ok')
+                break
+            except:
+                print('video on')
+                self.video()
+                continue
+        self.videore.close()
+        print('video close')
 
         cmd = f'ffmpeg.exe -i ".\\tmp\\{self.title}.mp4" -i ".\\tmp\\{self.title}.mp3" -c:v copy -c:a aac -strict ' \
               f'experimental -y "{self.fold + "/" + self.title}.mp4" '
@@ -163,9 +160,9 @@ class BilibiliVideo:
 if __name__ == '__main__':
     bili = BilibiliVideo()
     bili.cookie('e047d422%2C1692100614%2C8cf3d%2A21')
-    video = bili.bili_requests('BV1J84y1V7BH')
-    # bili.write('C:/Users/ljk/Pictures/视频项目')
+    video = bili.bili_requests('BV1fh411y7R8')
     # filename = bili.collectionname('BV1Zd4y1M7TB', 1)
     # print(bili.rename(filename))
     # bili.ffmpeg()
+    print(bili.size())
     print(bili.ffmpeg())
