@@ -88,14 +88,13 @@ class MyGui:
                     self.code = False
                 self.logok(self.bv.get() + '?p=' + str(i))
             self.log.insert(1.0, f'视频合集{self.bv.get()}?p={self.start.get()}-{self.stop.get()}下载完成！，'
-                                 f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
-            self.log.insert(1.0, '\n')
+                                 f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
+
         else:
             try:
                 video = self.bili.bili_requests(self.bv.get())
                 self.log.insert(1.0, f'开始下载{self.bv.get()}，视频大小：{self.bili.size()}，'
-                                     f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
-                self.log.insert(1.0, '\n')
+                                     f'Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
             except:
                 messagebox.showinfo("警告！", "请求失败！")
             if video == 200:
@@ -120,10 +119,9 @@ class MyGui:
 
     def logok(self, bv):
         if self.code:
-            self.log.insert(1.0, f'视频{bv}下载成功，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
+            self.log.insert(1.0, f'视频{bv}下载成功，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
         elif not self.code:
-            self.log.insert(1.0, f'视频{bv}下载失败，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}')
-        self.log.insert(1.0, '\n')
+            self.log.insert(1.0, f'视频{bv}下载失败，Time：{time.strftime("%Y-%m-%d %H:%M:%S")}\n')
 
     def temp_config(self):
         # 判断是否存在文件如果不存在则创建
