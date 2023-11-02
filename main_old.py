@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 import tkinter.ttk
-from BilibiliVideo import *
+from BilibiliVideo_old import *
 import time
 
 
@@ -14,6 +14,7 @@ class MyGui:
         self.init_windows_name.title("BiliVideo v1.6")
         self.init_windows_name.config(bg='#DDDDDD')
         self.init_windows_name.geometry('600x300')
+        self.init_windows_name.resizable(False,False)
         self.CheckbuttonVar = StringVar(value=0)
         self.stop = StringVar(value='stop')
         self.start = StringVar(value='start')
