@@ -184,7 +184,8 @@ class Function:
         bvid = self.mygui.input_bvid.get()
         directory = self.mygui.input_directory.get()
         directory = str(directory) + '/' + str(self.get_title(bvid))
-        os.makedirs(directory)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         quality = self.quality_reverse(self.mygui.combobox_quality.get())
         self.disable_all_widgets()
         if not self.inspect_bvid(bvid):
@@ -278,7 +279,7 @@ class Function:
     
     def title_filterate(slef, title):
         """ 过滤标题特殊字符 """
-        return re.sub(r"[\/,:*?<>| ：&]", "", title)
+        return re.sub(r"\/|\,|\:|\*|\?|\<|\>|\\|\&|\[|\]|\.\.|\||\'|\"", "", title)
 
     def inspect_bvid(self, bvid):
         """ 检查BV号 """
@@ -434,8 +435,9 @@ class Video:
             data = response.json()
             if data['code'] == 0:
                 quality_dict = []
-                for i in data['data']['dash']['video']:
-                    quality_dict.append(i['id'])
+                if len(data['data']) > 3:
+                    for i in data['data']['dash']['video']:
+                        quality_dict.append(i['id'])
                 return quality_dict
 
     def request_url(self, bvid, cid):
