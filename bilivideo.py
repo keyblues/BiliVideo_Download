@@ -170,8 +170,12 @@ class Function:
         self.add_log(f"BV号: {bvid} 状态: 正在合成, 请耐心等待")
 
         title = self.get_title(bvid)
-
-        self.merge_videos(filename_temp, directory + '/' + title)
+        try:
+            self.merge_videos(filename_temp, directory + '/' + title)
+        except:
+            messagebox.showinfo("错误", '合成失败，请重试')
+            self.enable_all_widgets()
+            return 0
         self.add_log(f"BV号: {bvid} 状态: 合成完毕, 请前往视频保存目录查看")
 
         self.enable_all_widgets()
@@ -203,8 +207,12 @@ class Function:
 
             title = self.get_title_collection(bvid, pages)
 
-            self.merge_videos(filename_temp, directory + '/' + title)
-            self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
+            try:
+                self.merge_videos(filename_temp, directory + '/' + title)
+            except:
+                messagebox.showinfo("错误", '合成失败，请重试')
+                self.enable_all_widgets()
+                self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
 
         self.enable_all_widgets()
         self.add_log(f"BV号: {bvid} 状态: 合集全部下载完成")
@@ -214,7 +222,7 @@ class Function:
         video = VideoFileClip(f"{filename_temp}.mp4")
         audio = AudioFileClip(f"{filename_temp}.mp3")
         final_video = video.set_audio(audio)
-        final_video.write_videofile(f"{filename_new}.mp4")
+        final_video.write_videofile(f"{filename_new}.mp4", verbose=False, logger=None)
         self.mygui.progressbar['value'] = self.maximum
         self.remove(filename_temp)
     
