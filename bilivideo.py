@@ -142,7 +142,24 @@ class Function:
             else:
                 messagebox.showinfo("温馨提示", '起始集数不能大于结束集数')
         else:
-            self.download(pages=1)
+            self.retry_function(self.download, 5, 1)
+
+    def retry_function(self, func, max_retries=5, *args):
+        retries = 0
+        self.errer_download = []
+        while retries < max_retries:
+            try:
+                return func(*args)
+            except Exception as e:
+                self.add_log(f"下载出错, 错误信息: {e}")
+                retries += 1
+                if retries < max_retries:
+                    self.add_log(f"等待10秒后重试, 当前重试次数: {retries}")
+                    time.sleep(10)
+                else:
+                    self.add_log("已达到最大重试次数, 放弃重试")
+                    self.errer_download.append(*args)
+                    self.enable_all_widgets()
 
     def download(self, pages):
         bvid = self.mygui.input_bvid.get()
@@ -197,26 +214,29 @@ class Function:
         if quality == '':
             messagebox.showinfo("温馨提示", '请选择视频质量')
             return 0
+        
         for pages in range(start, stop+1):
-            videore, audiore = self.video.get_video(bvid, pages=pages, quality=quality)
-            bit = self.get_bit(videore, audiore)
-            self.set_progressbar(bit)
-            self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 正在下载, 质量 {self.mygui.combobox_quality.get()}, 大小 {self.size(bit)}")
-
-            filename_temp = self.save(directory, videore, audiore)
-            self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 正在合成, 请耐心等待")
-
-            title = self.get_title_collection(bvid, pages)
-
-            try:
-                self.merge_videos(filename_temp, directory + '/' + title)
-            except:
-                messagebox.showinfo("错误", '合成失败，请重试')
-                self.enable_all_widgets()
-                self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
+            def download_pages(pages):
+                videore, audiore = self.video.get_video(bvid, pages=pages, quality=quality)
+                bit = self.get_bit(videore, audiore)
+                self.set_progressbar(bit)
+                self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 正在下载, 质量 {self.mygui.combobox_quality.get()}, 大小 {self.size(bit)}")
+                filename_temp = self.save(directory, videore, audiore)
+                self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 正在合成, 请耐心等待")
+                title = self.get_title_collection(bvid, pages)
+                try:
+                    self.merge_videos(filename_temp, directory + '/' + title)
+                except:
+                    messagebox.showinfo("错误", '合成失败，请重试')
+                    self.enable_all_widgets()
+                    self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
+            self.retry_function(download_pages, 5, pages)
 
         self.enable_all_widgets()
-        self.add_log(f"BV号: {bvid} 状态: 合集全部下载完成")
+        if bool(self.errer_download):
+            self.add_log(f"BV号: {bvid} 状态: 出错合集{self.errer_download}")
+        else:
+            self.add_log(f"BV号: {bvid} 状态: 合集全部下载完成")
 
     def merge_videos(self, filename_temp, filename_new):
         """ 合并视频和音频 """
