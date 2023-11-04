@@ -20,7 +20,7 @@ class MyGui:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
         scale_factor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
         self.init_windows = init_windows
-        self.init_windows.title('BiliVideo_Download GUI v2.0.1 by keyblue.cn')
+        self.init_windows.title('BiliVideo_Download GUI v2.0.2 by keyblue.cn')
         self.init_windows.config(bg='#FFFFFF')
         self.init_windows.geometry("600x365")
         self.init_windows.call('tk', 'scaling', scale_factor / 75)
