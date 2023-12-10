@@ -20,7 +20,7 @@ class MyGui:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
         scale_factor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
         self.init_windows = init_windows
-        self.init_windows.title('BiliVideo_Download GUI v2.0.2 by keyblue.cn')
+        self.init_windows.title('BiliVideo_Download GUI v2.0.3 by keyblue.cn')
         self.init_windows.config(bg='#FFFFFF')
         self.init_windows.geometry("600x365")
         self.init_windows.call('tk', 'scaling', scale_factor / 75)
@@ -60,7 +60,7 @@ class MyGui:
         self.text_log.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=True)
         self.text_log.configure(font=("微软雅黑", 9), bd=1, relief="solid", yscrollcommand=self.scroll.set)
         self.scroll.config(command=self.text_log.yview)
-        self.text_log.insert(tkinter.END, "欢迎! 更多请访问www.keyblue.com")
+        self.text_log.insert(tkinter.END, "欢迎! 更多请访问www.keyblue.cn")
 
         # 按钮
         self.button_directory = ttk.Button(self.init_windows, text="...", command=self.open_directory)
@@ -143,8 +143,15 @@ class Function:
                 messagebox.showinfo("温馨提示", '起始集数不能大于结束集数')
         else:
             self.retry_function(self.download, 5, 1)
+            self.enable_all_widgets()
 
     def retry_function(self, func, max_retries=5, *args):
+        """
+        重试函数
+        :param func: 被重试的函数
+        :param max_retries: 最大重试次数
+        :param args: 被重试函数的参数
+        """
         retries = 0
         self.errer_download = []
         while retries < max_retries:
@@ -159,9 +166,11 @@ class Function:
                 else:
                     self.add_log("已达到最大重试次数, 放弃重试")
                     self.errer_download.append(*args)
-                    self.enable_all_widgets()
+                    return False
+                
 
     def download(self, pages):
+        """ 单集下载 """
         bvid = self.mygui.input_bvid.get()
         directory = self.mygui.input_directory.get()
         quality = self.quality_reverse(self.mygui.combobox_quality.get())
@@ -192,12 +201,13 @@ class Function:
         except:
             messagebox.showinfo("错误", '合成失败，请重试')
             self.enable_all_widgets()
-            return 0
+            return False
         self.add_log(f"BV号: {bvid} 状态: 合成完毕, 请前往视频保存目录查看")
 
         self.enable_all_widgets()
     
     def download_collection(self, start, stop):
+        """ 合集下载 """
         bvid = self.mygui.input_bvid.get()
         directory = self.mygui.input_directory.get()
         directory = str(directory) + '/' + str(self.get_title(bvid))
@@ -228,9 +238,12 @@ class Function:
                     self.merge_videos(filename_temp, directory + '/' + title)
                 except:
                     messagebox.showinfo("错误", '合成失败，请重试')
-                    self.enable_all_widgets()
-                    self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
-            self.retry_function(download_pages, 5, pages)
+                    return False
+                self.add_log(f"BV号: {bvid} 合集: {pages} 状态: 合成完毕, 请前往视频保存目录查看")
+                    
+            if not self.retry_function(download_pages, 5, pages):
+                """ 跳过该视频 """
+                continue
 
         self.enable_all_widgets()
         if bool(self.errer_download):
